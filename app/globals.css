@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --volt:#2621FF;--volt-deep:#171254;--volt-navy:#0C0940;
+  --copper:#C6741E;--copper-light:#E89A4A;
+  --ink:#0B1220;--ink2:#1A2030;--muted:#4B5567;--faint:#8B93A3;
+  --border:#E4E0D5;--paper:#FAF8F4;
+  --panel:#0A0E17;--panel-soft:#101627;--panel-line:rgba(120,140,255,.18);
+  color-scheme:light
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background-color:#fff;color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Syne',sans-serif;letter-spacing:-0.01em}
+
+/* ---------- Brand gradient text (headline accents) ---------- */
+.brand-text{background:linear-gradient(100deg,var(--volt) 0%,#4C46FF 35%,var(--copper) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-text-orange{background:linear-gradient(100deg,var(--volt),var(--copper));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-text-teal{background:linear-gradient(100deg,var(--ink),var(--volt-deep));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-text,.brand-text-orange,.brand-text-teal{background-size:220% auto;animation:text-shimmer 9s ease-in-out infinite}
+@keyframes text-shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ---------- Cards: "spec-plate" treatment — hairline border + corner test-point ticks, instead of the generic identical drop-shadow card ---------- */
+.card{position:relative;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(11,18,32,.04),0 10px 28px -14px rgba(11,18,32,.16);transition:box-shadow .3s ease,transform .3s ease,border-color .3s ease}
+.card::before,.card::after{content:'';position:absolute;width:9px;height:9px;border:1.5px solid var(--border2,#CFC9B8);opacity:0;transition:opacity .3s ease}
+.card::before{top:7px;left:7px;border-right:none;border-bottom:none}
+.card::after{bottom:7px;right:7px;border-left:none;border-top:none}
+.card:hover{box-shadow:0 24px 48px -18px rgba(38,33,255,.18);transform:translateY(-3px);border-color:rgba(38,33,255,.35)}
+.card:hover::before,.card:hover::after{opacity:1;border-color:var(--volt)}
+.card-flat{background:#fff;border:1px solid var(--border);border-radius:14px}
+.card-surface{background:var(--paper);border:1px solid var(--border);border-radius:14px}
+
+/* ---------- Spec-tag label (replaces the generic tracked eyebrow-with-dash) ---------- */
+.section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--volt);display:inline-flex;align-items:center;gap:8px;margin-bottom:14px;padding:3px 0}
+.section-eyebrow::before{content:'';width:7px;height:7px;flex-shrink:0;border:1.5px solid currentColor;transform:rotate(45deg)}
+
+.gradient-border{position:relative;border-radius:14px}
+.gradient-border::before{content:'';position:absolute;inset:-1.5px;border-radius:15px;background:linear-gradient(135deg,var(--volt),#4C46FF,var(--copper));z-index:-1;opacity:0;transition:opacity .3s}
+.gradient-border:hover::before{opacity:1}
+
+/* ---------- Form controls ---------- */
+.tool-input{width:100%;background:var(--paper);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13.5px;transition:all .2s;outline:none}
+.tool-input:focus{border-color:var(--volt);background:#fff;box-shadow:0 0 0 3px rgba(38,33,255,.12)}
+.tool-input option{background:#fff;color:var(--ink)}
+select optgroup{background:#F1EEE6;color:var(--volt);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+select optgroup option,select option{background:#fff;color:var(--ink);font-weight:400;font-size:13px}
+input[type="time"],input[type="time"].tool-input{min-width:92px;color:var(--ink);color-scheme:light}
+input[type="number"].tool-input,input[type="text"].tool-input,textarea.tool-input{color:var(--ink)}
+.tab-active{background:rgba(38,33,255,.08);border-color:rgba(38,33,255,.5)!important;color:var(--volt)!important}
+.problem-card{border-left:3px solid transparent}
+.ring-svg{transform:rotate(-90deg)}.ring-track{fill:none;stroke:var(--border);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+
+/* ---------- Buttons ---------- */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:linear-gradient(135deg,var(--volt),var(--volt-deep));border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 18px rgba(38,33,255,.32);text-decoration:none}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(38,33,255,.4)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--volt);background:transparent;border:1.5px solid rgba(38,33,255,.4);cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-secondary:hover{background:var(--volt);color:#fff;border-color:var(--volt);box-shadow:0 6px 18px rgba(38,33,255,.32)}
+.btn-teal{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:linear-gradient(135deg,var(--ink),var(--ink2));border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 18px rgba(11,18,32,.28);text-decoration:none}
+.btn-teal:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(11,18,32,.38)}
+.btn-copper{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:linear-gradient(135deg,var(--copper),#A85D14);border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 18px rgba(198,116,30,.32);text-decoration:none}
+.btn-copper:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(198,116,30,.4)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.badge-teal{background:rgba(11,18,32,.05);color:var(--ink);border:1px solid rgba(11,18,32,.16)}
+.badge-orange{background:rgba(38,33,255,.07);color:var(--volt);border:1px solid rgba(38,33,255,.22)}
+
+/* ---------- Backgrounds ---------- */
+.bg-dots{background-color:#fff;background-image:radial-gradient(var(--border) 1px,transparent 1px);background-size:26px 26px}
+.bg-subtle{background-color:var(--paper)}
+.bg-schematic{background-color:#fff;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 40%,transparent 100%);mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000 40%,transparent 100%)}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:#CFC9B8;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#a89f88}
+
+/* ---------- Dark instrument-panel section (used sparingly, for contrast) ---------- */
+.panel-dark{background:var(--panel);color:#EDEFF7;position:relative}
+.panel-dark::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--panel-line) 1px,transparent 1px),linear-gradient(90deg,var(--panel-line) 1px,transparent 1px);background-size:64px 64px;opacity:.5;pointer-events:none}
+.panel-dark .card,.panel-dark .card-flat{background:var(--panel-soft);border-color:rgba(120,140,255,.18);color:#EDEFF7}
+.panel-dark .card::before,.panel-dark .card::after{border-color:rgba(120,140,255,.35)}
+
+/* ---------- Animated flowing border — wraps the sizing tool panels ---------- */
+.tool-frame{position:relative;border-radius:18px;padding:2px;background:linear-gradient(90deg,var(--volt),#4C46FF,var(--copper),var(--volt-deep),var(--volt));background-size:300% 100%;animation:border-flow 9s linear infinite;box-shadow:0 20px 50px -20px rgba(38,33,255,.25)}
+.tool-frame-inner{background:#fff;border-radius:16px;overflow:hidden}
+@keyframes border-flow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* ---------- Scroll-reveal, driven by the Reveal component ---------- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.22,.7,.3,1),transform .7s cubic-bezier(.22,.7,.3,1)}
+.reveal-visible{opacity:1;transform:translateY(0)}
+
+/* ---------- Signature motif: the energy-flow trace, echoed as a divider ---------- */
+.trace-divider{position:relative;height:64px;overflow:hidden}
+.trace-divider svg{position:absolute;inset:0;width:100%;height:100%}
+.trace-line{stroke-dasharray:6 10;animation:trace-flow 3.4s linear infinite}
+@keyframes trace-flow{to{stroke-dashoffset:-160}}
+
+/* ---------- Ambient orb (kept subtle — used once in the hero background) ---------- */
+@keyframes orb-pulse{0%,100%{transform:scale(1) translateY(0);opacity:.9}50%{transform:scale(1.08) translateY(-12px);opacity:.55}}
+.orb-pulse{animation:orb-pulse 10s ease-in-out infinite}
+
+/* ---------- Sun glow — used on the energy-assessment sun icon ---------- */
+@keyframes sun-pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,154,74,.45)}50%{box-shadow:0 0 0 12px rgba(232,154,74,0)}}
+.sun-pulse{animation:sun-pulse 2.6s ease-out infinite}
+@keyframes sun-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.sun-rays{animation:sun-spin 16s linear infinite;transform-origin:center}
+
+/* ---------- Scanning sweep — evokes an assessment/analysis pass over data ---------- */
+@keyframes scan-sweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.scan-sweep{animation:scan-sweep 3.2s ease-in-out infinite}
+
+/* ---------- Gentle up/down bob, used on small decorative badges ---------- */
+@keyframes soft-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.soft-bob{animation:soft-bob 3s ease-in-out infinite}
+
+/* ---------- Hero energy-flow schematic (signature moment) ---------- */
+@keyframes flow-pulse{0%{stroke-dashoffset:220}100%{stroke-dashoffset:0}}
+.flow-line{stroke-dasharray:4 7;animation:flow-pulse 5.5s linear infinite}
+@keyframes node-glow{0%,100%{filter:drop-shadow(0 0 2px currentColor)}50%{filter:drop-shadow(0 0 8px currentColor)}}
+.node-glow{animation:node-glow 2.8s ease-in-out infinite}
+
+@media (prefers-reduced-motion: reduce){
+  .tool-frame,.brand-text,.brand-text-orange,.brand-text-teal,.reveal,.orb-pulse,.animate-float,.sun-pulse,.sun-rays,.scan-sweep,.soft-bob,.trace-line,.flow-line,.node-glow{animation:none!important;transition:none!important}
+  .reveal{opacity:1!important;transform:none!important}
+}
+
+/* ======================================================================
+   Polish layer — entrance sequence, answer-to-action motion, a11y
+   ====================================================================== */
+
+/* Hero: one orchestrated page-load sequence (headline lines rise in order, the circuit card settles last). */
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.rise{opacity:0;animation:rise .85s cubic-bezier(.22,.7,.3,1) forwards}
+@keyframes rise-card{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+.rise-card{opacity:0;animation:rise-card 1s cubic-bezier(.22,.7,.3,1) forwards}
+
+/* Result numbers: a short pop when a value changes (the element is re-keyed on change). */
+@keyframes num-pop{0%{opacity:.25;transform:translateY(6px) scale(.96)}60%{opacity:1;transform:translateY(-1px) scale(1.03)}100%{transform:none}}
+.num-pop{animation:num-pop .45s cubic-bezier(.22,.7,.3,1)}
+
+/* Primary buttons: a light sweep on hover/focus (answers the pointer, never runs on its own). */
+.btn-primary{position:relative;overflow:hidden;isolation:isolate}
+.btn-primary::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s ease}
+.btn-primary:hover::after,.btn-primary:focus-visible::after{transform:translateX(120%)}
+.btn-primary:active{transform:translateY(0) scale(.985)}
+
+/* Keyboard focus is always visible; text selection carries the brand colour. */
+:focus-visible{outline:2px solid var(--volt);outline-offset:2px}
+.panel-dark :focus-visible{outline-color:#8D88FF}
+.tool-input:focus-visible{outline:none}
+::selection{background:rgba(38,33,255,.18);color:var(--ink)}
+
+/* Cards in the dark panel keep the hover treatment readable. */
+.panel-dark .card:hover{border-color:rgba(140,150,255,.5);box-shadow:0 24px 48px -18px rgba(38,33,255,.35)}
+
+@media (prefers-reduced-motion: reduce){
+  .rise,.rise-card{opacity:1!important;animation:none!important;transform:none!important}
+  .num-pop,.btn-primary::after{animation:none!important;transition:none!important}
+}
