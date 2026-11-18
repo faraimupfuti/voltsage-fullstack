@@ -132,7 +132,7 @@ export function cleanClient(d: ReportDetails): ReportClient {
   return { name: clip(d.name, 80), company: clip(d.company, 100), location: clip(d.location, 120) }
 }
 
-function ReportDetailsForm({ showErrors, error, rootRef }: { showErrors: boolean; error: string; rootRef: React.RefObject<HTMLDivElement> }) {
+function ReportDetailsForm({ showErrors, error, rootRef }: { showErrors: boolean; error: string; rootRef: React.RefObject<HTMLDivElement | null> }) {
   const { t } = useLang()
   const uid = useId()
   const { details, setDetails, geo, detect } = useSite()
