@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   // The Worker's name. It also sets the default URL: https://voltsage.<your-subdomain>.workers.dev
-  "name": "voltsage",
+  "name": "voltsage-fullstack",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-06-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
