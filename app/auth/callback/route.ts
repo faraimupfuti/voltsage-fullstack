@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const rawNext = searchParams.get('next') || '/'
   const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/'
   if (code) {
-    const supabase = getSupabaseServer()
+    const supabase = await getSupabaseServer()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (error) return NextResponse.redirect(`${origin}/?auth=error`)
   }

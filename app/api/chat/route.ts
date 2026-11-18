@@ -14,7 +14,8 @@ interface ChatMessage { role: 'user' | 'assistant'; content: any }
 /** Server-side check of the Supabase session cookie. Any failure is treated as "not signed in". */
 async function isSignedIn(): Promise<boolean> {
   try {
-    const { data } = await getSupabaseServer().auth.getUser()
+    const supabase = await getSupabaseServer()
+    const { data } = await supabase.auth.getUser()
     return !!data.user
   } catch {
     return false

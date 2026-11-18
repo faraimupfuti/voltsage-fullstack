@@ -6,7 +6,7 @@ Clean white professional design of the VoltSage solar sizing platform.
 Same tools, same content, different visual design.
 
 ## Tech stack
-- Next.js 14 (App Router, TypeScript)
+- Next.js 15 + React 19 (App Router, TypeScript)
 - Tailwind CSS (light palette — white + orange/teal brand accents)
 - Lucide React icons
 - Framer Motion (sign-in dialog, hero)
@@ -59,23 +59,31 @@ Sign-in has two tabs, **Individual** and **Organisation**. An account only signs
 
 ## Deploy on Cloudflare (from GitHub)
 
-The site runs as a Cloudflare Worker built with [OpenNext](https://opennext.js.org/cloudflare). Every push to `main` deploys through `.github/workflows/deploy-cloudflare.yml`.
+The site runs as a Cloudflare Worker, built with [OpenNext](https://opennext.js.org/cloudflare) (this needs Next.js 15.5.29 or newer, which the project now uses). Cloudflare builds and deploys every push to your GitHub repository.
 
-**One-time setup**
-1. Push the project to a GitHub repository (default branch `main`).
-2. Cloudflare dashboard: copy your **Account ID** (Workers & Pages overview). Then My Profile > API Tokens > Create Token > the **Edit Cloudflare Workers** template.
-3. GitHub repo > Settings > Secrets and variables > Actions > **Secrets**: add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
-4. Push (or run the workflow from the Actions tab). The first run creates the Worker named `voltsage`; its URL is shown in the log (`voltsage.<your-subdomain>.workers.dev`).
-5. Cloudflare > Workers & Pages > voltsage > Settings > **Variables and secrets**: add `ANTHROPIC_API_KEY`, `WEATHERSTACK_API_KEY`, `CONTACT_WEBHOOK_URL`, `FEEDBACK_WEBHOOK_URL` as **Secrets**. Secrets set in the dashboard survive later deploys.
-6. Custom domain: add `voltsage.co` to your Cloudflare account, then either uncomment `routes` in `wrangler.jsonc` or use Workers & Pages > voltsage > Settings > Domains & Routes.
-7. Supabase > Authentication > URL Configuration: add your Worker URL and `https://voltsage.co/auth/callback` (and the `workers.dev` equivalent) to the redirect URLs.
+**Create the project**
+1. Cloudflare dashboard > Workers & Pages > Create > **Import a repository** (connect GitHub, pick this repo and the `main` branch).
+2. **Project name: `voltsage`.** It must match `name` in `wrangler.jsonc`.
+3. **Build command:** `npx opennextjs-cloudflare build`
+4. **Deploy command:** `npx opennextjs-cloudflare deploy`
+5. Save and deploy. Later pushes to `main` deploy automatically.
 
-**Try it locally** (needs a Cloudflare login): `npm install && npm run preview:cf`. Plain `npm run dev` still works for everyday development.
+**Lockfile (do this once, before the first build)**
+Cloudflare installs with `npm clean-install`, which needs a `package-lock.json` that matches `package.json`. The zip ships without one on purpose (the old one was out of date). On your computer run `npm install`, then commit and push the new `package-lock.json`. If an old `package-lock.json` is still in your GitHub repo, replace it with the new one.
+
+**Environment**
+- Workers & Pages > voltsage > Settings > **Variables and secrets**: add `ANTHROPIC_API_KEY`, `WEATHERSTACK_API_KEY`, `CONTACT_WEBHOOK_URL`, `FEEDBACK_WEBHOOK_URL` as **Secrets**.
+- `NEXT_PUBLIC_*` values are baked in at build time. If you want to override the Supabase defaults, add them under Settings > **Build** > Variables and secrets (not the runtime ones).
+
+**Domain and auth**
+- Add `voltsage.co` to your Cloudflare account, then use Workers & Pages > voltsage > Settings > Domains & Routes (or uncomment `routes` in `wrangler.jsonc`).
+- Supabase > Authentication > URL Configuration: add your `voltsage.<subdomain>.workers.dev` URL and `https://voltsage.co/auth/callback` to the redirect URLs.
+
+**Try it locally** (needs a Cloudflare login): `npm run preview:cf`. Plain `npm run dev` is still the everyday command.
 
 Notes
-- `NEXT_PUBLIC_*` values are baked in at build time, so set them as GitHub Actions *variables*, not Cloudflare secrets. They are optional; the code falls back to the project's current Supabase values.
 - Image optimisation is off (`images.unoptimized`), which is what you want on Workers. No other bindings are needed.
-- Commit the refreshed `package-lock.json` after your first `npm install`.
+- `.github/workflows/deploy-cloudflare.yml` is an optional manual alternative; ignore it if you use the dashboard route above.
 
 ## Deploy to GitHub
 ```bash

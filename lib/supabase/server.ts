@@ -2,8 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { SUPABASE_URL, SUPABASE_KEY } from './config'
 
-export function getSupabaseServer() {
-  const store = cookies()
+export async function getSupabaseServer() {
+  const store = await cookies()
   return createServerClient(SUPABASE_URL, SUPABASE_KEY, {
     cookies: {
       getAll: () => store.getAll(),
