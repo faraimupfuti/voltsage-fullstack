@@ -1,0 +1,41 @@
+# Supabase CLI configuration for the VoltSage project.
+#   supabase config push   → sends the [auth] settings below to the linked project (it shows a diff and asks first)
+# Secrets are NOT stored here. They are read from environment variables (see supabase/.env.example).
+
+project_id = "qnlpdsqrqqrmbggjujqi"
+
+[auth]
+enabled = true
+site_url = "https://voltsage.co"
+additional_redirect_urls = [
+  "https://voltsage.co/**",
+  "https://www.voltsage.co/**",
+  "https://voltsage-fullstack.*.workers.dev/**",
+  "http://localhost:3000/**",
+]
+enable_signup = true
+minimum_password_length = 8
+enable_refresh_token_rotation = true
+
+[auth.email]
+enable_signup = true
+# Must stay true: team invites are matched to VERIFIED email addresses only (see README).
+enable_confirmations = true
+double_confirm_changes = true
+secure_password_change = true
+
+# Supabase's built-in email sender is for testing only: it is heavily rate limited and only delivers to your own
+# team's addresses. Before real users sign up, set up your own SMTP provider, then uncomment and fill this in.
+# [auth.email.smtp]
+# host = "smtp.example.com"
+# port = 587
+# user = "env(SMTP_USER)"
+# pass = "env(SMTP_PASS)"
+# admin_email = "info@voltsage.co"
+# sender_name = "VoltSage"
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+skip_nonce_check = false

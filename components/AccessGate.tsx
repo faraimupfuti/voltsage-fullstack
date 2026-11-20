@@ -112,10 +112,10 @@ export function AccessProvider({ children }: { children: ReactNode }) {
 
   // Profile, invites and organisation. Rows are created by database triggers and functions (see migration 003).
   const loadAccount = useCallback(async (u: User, alive: () => boolean) => {
-    const sb = getSupabase()
+    const sb: any = getSupabase() // no generated database types, so rows are untyped
     const cols = 'full_name,country,created_at,account_type'
     try { await sb.rpc('claim_org_invites') } catch { /* no invites, or migration not applied yet */ }
-    let { data: p } = await sb.from('profiles').select(cols).eq('id', u.id).maybeSingle()
+    let { data: p }: { data: any } = await sb.from('profiles').select(cols).eq('id', u.id).maybeSingle()
     if (p && !p.account_type) {
       let pending: { type?: string; org?: string } | null = null
       try { pending = JSON.parse(localStorage.getItem(PENDING_KEY) || 'null'); localStorage.removeItem(PENDING_KEY) } catch { /* ignore */ }
@@ -123,7 +123,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
       const again = await sb.from('profiles').select(cols).eq('id', u.id).maybeSingle()
       p = again.data
     }
-    const { data: m } = await sb.from('org_members').select('role, organizations(id,name,seat_limit)').eq('user_id', u.id).maybeSingle()
+    const { data: m }: { data: any } = await sb.from('org_members').select('role, organizations(id,name,seat_limit)').eq('user_id', u.id).maybeSingle()
     if (!alive()) return
     if (p) setProfile(p as Profile)
     const o = m ? (Array.isArray(m.organizations) ? m.organizations[0] : m.organizations) : null
@@ -171,7 +171,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
   const updateProfile = useCallback(async (patch: { full_name?: string; country?: string }) => {
     const u = userRef.current
     if (!u) return 'not signed in'
-    const sb = getSupabase()
+    const sb: any = getSupabase()
     const { error } = await sb.from('profiles').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', u.id)
     if (error) return error.message
     setProfile(p => ({ full_name: null, country: null, created_at: null, account_type: null, ...(p || {}), ...patch }))
@@ -416,7 +416,7 @@ function AuthDialog({ initialMode, initialKind, reason, onClose }: { initialMode
         const { data: sess, error: err } = await sb.auth.signInWithPassword({ email: em, password })
         if (err || !sess?.user) { checking.current = false; if (err && /confirm/i.test(err.message)) setVerifyEmail(em); else setError(a.errCredentials); return }
         // Two logins: the account must match the tab it signed in on.
-        const { data: prof } = await sb.from('profiles').select('account_type').eq('id', sess.user.id).maybeSingle()
+        const { data: prof }: { data: any } = await (sb as any).from('profiles').select('account_type').eq('id', sess.user.id).maybeSingle()
         const at = prof?.account_type as AccountType | null | undefined
         if (at && at !== kind) { await sb.auth.signOut(); checking.current = false; setError(at === 'organisation' ? a.errIsOrg : a.errIsIndividual); return }
         checking.current = false

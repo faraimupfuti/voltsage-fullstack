@@ -18,7 +18,8 @@ export default function TeamPanel() {
   const isAdmin = org?.role === 'admin'
 
   const loadRoster = useCallback(async () => {
-    const { data } = await getSupabase().rpc('org_roster')
+    const db: any = getSupabase()
+    const { data } = await db.rpc('org_roster')
     setRoster(Array.isArray(data) ? (data as RosterRow[]) : [])
   }, [])
   useEffect(() => { if (isAdmin) loadRoster().catch(() => {}) }, [isAdmin, loadRoster])
@@ -27,7 +28,7 @@ export default function TeamPanel() {
     /seats_full/.test(m) ? a.seatsFull : /invalid_email/.test(m) ? a.errInvalidEmail : /already_member/.test(m) ? a.errAlreadyMember
     : /invalid_name/.test(m) ? a.errOrgName : a.errTeam
 
-  const run = async (fn: () => PromiseLike<{ error: { message: string } | null }>, okText: string, after?: () => void) => {
+  const run = async (fn: () => PromiseLike<any>, okText: string, after?: () => void) => {
     setBusy(true); setMsg(null)
     try {
       const { error } = await fn()
@@ -61,7 +62,7 @@ export default function TeamPanel() {
               <span className="mb-1.5 block text-xs font-medium text-ink-muted">{a.orgName}</span>
               <input className="tool-input" value={orgName} onChange={e => setOrgName(e.target.value)} autoComplete="organization" />
             </label>
-            <button disabled={busy || orgName.trim().length < 2} onClick={() => run(() => getSupabase().rpc('create_organisation', { p_name: orgName.trim() }), a.orgCreated, () => setOrgName(''))} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
+            <button disabled={busy || orgName.trim().length < 2} onClick={() => run(() => (getSupabase() as any).rpc('create_organisation', { p_name: orgName.trim() }), a.orgCreated, () => setOrgName(''))} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
               {busy && <Loader2 size={14} className="animate-spin" />} {a.createOrgBtn}
             </button>
           </div>
@@ -92,7 +93,7 @@ export default function TeamPanel() {
                 </span>
                 {r.id !== user.id && (
                   <button disabled={busy} aria-label={r.kind === 'invite' ? a.revokeBtn : a.removeBtn} title={r.kind === 'invite' ? a.revokeBtn : a.removeBtn}
-                    onClick={() => run(() => getSupabase().rpc(r.kind === 'invite' ? 'revoke_invite' : 'remove_member', r.kind === 'invite' ? { p_id: r.id } : { p_user: r.id }), '')}
+                    onClick={() => run(() => (getSupabase() as any).rpc(r.kind === 'invite' ? 'revoke_invite' : 'remove_member', r.kind === 'invite' ? { p_id: r.id } : { p_user: r.id }), '')}
                     className="rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"><Trash2 size={15} /></button>
                 )}
               </li>
@@ -106,7 +107,7 @@ export default function TeamPanel() {
                 <Mail size={15} aria-hidden className="pointer-events-none absolute bottom-3 left-3.5 text-ink-faint" />
                 <input type="email" className="tool-input !pl-10" value={email} onChange={e => setEmail(e.target.value)} autoComplete="off" placeholder="colleague@company.com" />
               </label>
-              <button disabled={busy || !email.trim() || seatsUsed >= limit} onClick={() => run(() => getSupabase().rpc('invite_member', { p_email: email.trim() }), a.inviteSent, () => setEmail(''))} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
+              <button disabled={busy || !email.trim() || seatsUsed >= limit} onClick={() => run(() => (getSupabase() as any).rpc('invite_member', { p_email: email.trim() }), a.inviteSent, () => setEmail(''))} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
                 {busy && <Loader2 size={14} className="animate-spin" />} {a.inviteBtn}
               </button>
             </div>

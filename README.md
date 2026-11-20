@@ -49,10 +49,21 @@ Sign-in has two tabs, **Individual** and **Organisation**. An account only signs
 - Battery Runtime has no Advanced mode, so it is standard-only (no PDF).
 
 ### One-time Supabase setup
-1. Run `supabase/migrations/001_profiles.sql`, `002_terms_acceptance.sql`, then `003_account_types.sql` (SQL editor).
-2. Authentication > URL Configuration: set the Site URL to `https://voltsage.co` and add `https://voltsage.co/auth/callback` and `http://localhost:3000/auth/callback` to the redirect URLs.
-3. Authentication > Providers: enable Google (add your Google OAuth client ID and secret).
+The app already points at the VoltSage project (`lib/supabase/config.ts`). Configure the project itself in one of two ways.
+
+**A. Command line (recommended).** Install the [Supabase CLI](https://supabase.com/docs/guides/cli), copy `supabase/.env.example` to `supabase/.env` and fill in the Google client ID and secret, then run `./scripts/setup-supabase.sh`. It logs in, links the project (asks for the database password), applies migrations 001-003, and pushes the auth settings in `supabase/config.toml` (Google sign-in, redirect URLs, email confirmation on). It is safe to re-run.
+
+**B. Dashboard.**
+1. SQL Editor > New query: paste all of `supabase/setup.sql` and run it.
+2. Authentication > URL Configuration: Site URL `https://voltsage.co`; add `https://voltsage.co/**`, `https://www.voltsage.co/**`, `https://voltsage-fullstack.*.workers.dev/**` and `http://localhost:3000/**` to the redirect URLs.
+3. Authentication > Sign In / Providers > Google: enable it and paste the client ID and secret.
 4. Authentication > Sign In / Providers > Email: keep **Confirm email on**. Team invites are matched to verified email addresses only; with confirmation off, anyone could claim an invite by typing the invited address.
+
+**Either way, also do these two things (no tool can do them for you)**
+- Google Cloud Console > APIs & Services > Credentials > your OAuth client > **Authorized redirect URIs**: add `https://qnlpdsqrqqrmbggjujqi.supabase.co/auth/v1/callback`.
+- Authentication > SMTP Settings: add your own email provider. Supabase's built-in sender is for testing only (heavily rate limited, and it only delivers to your own team's addresses), so without this, new users will not receive their confirmation emails.
+
+Never commit the database password, the Google client secret or `supabase/.env`; `.gitignore` already excludes them.
 
 ### Legal pages
 `/terms` and `/fair-use` render from `lib/legal.ts`. The company seat limit (`COMPANY_USERS`) and the "last updated" date live in `lib/plans.ts`.
